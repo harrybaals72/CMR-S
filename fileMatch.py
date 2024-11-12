@@ -37,6 +37,7 @@ def extract_id_from_filename(filename):
 def search_directory_for_ids(directory, ids):
     logger.debug(f"Searching directory: {directory}")
     matching_files = []
+    matching_ids = []
     video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv')
     for root, _, files in os.walk(directory):
         for file in files:
@@ -48,15 +49,42 @@ def search_directory_for_ids(directory, ids):
                 if file_id in ids:
                     logger.debug(f"Match found for ID {file_id}")
                     matching_files.append(os.path.join(root, file))
-    return matching_files
+                    matching_ids.append(file_id)
+
+    matching_files.sort()
+    matching_ids.sort(key=int)
+    return (matching_files, matching_ids)
+
+def update_database(db_path, matching_ids):
+    logger.info(f"Updating downloaded status for {len(matching_ids)} files in the database")
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    rows_updated = 0
+
+    cursor.executemany('''
+        UPDATE posts
+        SET downloaded = 1
+        WHERE id = ?
+        AND mediaType = 2
+    ''', [(post_id,) for post_id in matching_ids])
+
+    rows_updated = cursor.rowcount
+    logger.info(f"Rows updated: {rows_updated}")
+    
+    conn.commit()
+    conn.close()
 
 def update_downloaded_status(db_path, file_path):
     ids = get_ids_from_db(db_path)
     logger.debug(f"DB IDs: {ids}")
     logger.debug(f"Total DB IDs: {len(ids)}")
 
-    matching_files = search_directory_for_ids(os.path.dirname(file_path), ids)
+    matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), ids)
     
     logger.debug(f"Matching files: {matching_files}")
     logger.debug(f"Total matching files: {len(matching_files)}")
     
+    logger.debug(f"Matching IDs: {matching_ids}")
+    logger.debug(f"Total matching IDs: {len(matching_ids)}")
+
+    update_database(db_path, matching_ids)

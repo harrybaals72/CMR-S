@@ -59,6 +59,7 @@ def main():
     if not os.path.exists(db_folder):
         os.makedirs(db_folder)
     db_path = os.path.join(db_folder, profile_name + '.db')
+    logger.info(f"Database path: {db_path}")
     
     if not no_scrape:
         # Get data from the API

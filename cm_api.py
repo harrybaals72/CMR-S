@@ -70,6 +70,8 @@ def processResponse(data, cleaned_url):
         url = f"{cleaned_url}/post/{post_id}"
 
         text = processText(text)
+        if not text or not text.strip():
+            text = None
         
         if file_present or attachments_present:
             non_image_files = []
