@@ -7,4 +7,7 @@ def remove_html_tags(text):
 
 def processText(text):
     modifiedText = remove_html_tags(text)
+    modifiedText = modifiedText.replace('\n', ' ')
+    modifiedText = modifiedText.strip()
+    modifiedText = re.sub(' +', ' ', modifiedText)
     return modifiedText
