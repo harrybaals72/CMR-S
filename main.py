@@ -5,7 +5,6 @@ from urllib.parse import urlparse, urlunparse
 
 from arg_parser import parse_arguments
 from database import create_or_update_db
-from scraper import scrape_links
 from cm_api import get_posts_from_api, get_profile_name
 
 args = parse_arguments()
@@ -61,8 +60,6 @@ def main():
     
     # Get data from the API
     all_links = get_posts_from_api(api_url, url, 0, delay)
-
-    # all_links = scrape_links(start_url, base_url, delay)
 
     # Print the data
     logger.debug("Posts found:")
