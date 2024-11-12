@@ -74,7 +74,7 @@ def main():
         logger.info("Scraping disabled")
     
     if update:
-        logger.info("Updating the database with local files...")
+        logger.info(f"Updating the database with local files from path {file_path}")
         update_downloaded_status(db_path, file_path)
     else:
         logger.info("Database update disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")

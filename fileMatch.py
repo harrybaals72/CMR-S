@@ -9,7 +9,7 @@ def get_ids_from_db(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM posts")
-    ids = [row[0] for row in cursor.fetchall()]
+    ids = [str(row[0]).strip() for row in cursor.fetchall()]
     conn.close()
     return ids
 
@@ -35,16 +35,19 @@ def extract_id_from_filename(filename):
     return None
 
 def search_directory_for_ids(directory, ids):
+    logger.debug(f"Searching directory: {directory}")
     matching_files = []
+    video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv')
     for root, _, files in os.walk(directory):
         for file in files:
-            logger.debug(f"\nChecking file: {file}")
-            file_id = extract_id_from_filename(file)
-            logger.debug(f"Extracted ID: {file_id}")
+            if file.lower().endswith(video_extensions):
+                logger.debug(f"\nChecking video file: {file}")
+                file_id = extract_id_from_filename(file).strip()
+                logger.debug(f"Extracted ID: {file_id}")
 
-            if file_id in ids:
-                logger.debug(f"Match found for ID {file_id}")
-                matching_files.append(os.path.join(root, file))
+                if file_id in ids:
+                    logger.debug(f"Match found for ID {file_id}")
+                    matching_files.append(os.path.join(root, file))
     return matching_files
 
 def update_downloaded_status(db_path, file_path):
