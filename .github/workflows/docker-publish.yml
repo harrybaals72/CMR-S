@@ -30,11 +30,10 @@ jobs:
         VERSION=$(git rev-list --count HEAD)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         push: true
         tags: |
-          harrybaals72/cmr-s:latest
           harrybaals72/cmr-s:${{ env.VERSION }}
+          harrybaals72/cmr-s:latest

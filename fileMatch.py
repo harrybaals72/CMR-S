@@ -51,4 +51,5 @@ def update_downloaded_status(db_path, file_path):
         for file in files:
             matching_files.append(os.path.join(root, file))
     logger.debug(f"Matching files: {matching_files}")
+    logger.debug(f"Total matching files: {len(matching_files)}")
     
