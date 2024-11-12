@@ -29,13 +29,17 @@ logger = logging.getLogger(__name__)
 def main():
     print(f"Parsing arguments: {args}")
 
-    start_url = args.url
     delay = args.delay
     db_folder = args.output
     no_scrape = args.no_scrape
-    update = args.update
+    write = args.write
     file_path = args.file_path
     overwrite = args.overwrite
+
+    if args.url:
+        start_url = args.url
+    else:
+        start_url = f"https://coomer.su/{args.site}/user/{args.user}"
 
     parsed_url = urlparse(start_url)
     # Remove the query part by setting it to an empty string
@@ -75,11 +79,11 @@ def main():
     else:
         logger.info("Scraping disabled")
     
-    if update:
+    if write:
         logger.info(f"Updating the database with local files from path {file_path}")
         update_downloaded_status(db_path, file_path)
     else:
-        logger.info("Database update disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")
+        logger.info("Database write disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")
 
 if __name__ == '__main__':
     main()
