@@ -43,7 +43,12 @@ def search_directory_for_ids(directory, ids, conn):
         for file in files:
             if file.lower().endswith(video_extensions):
                 logger.debug(f"\nChecking video file: {file}")
-                file_id = extract_id_from_filename(file).strip()
+                file_id = extract_id_from_filename(file)
+                if not file_id:
+                    logger.debug(f"No ID found in filename: {file}")
+                    continue
+
+                file_id = file_id.strip()
                 logger.debug(f"Extracted ID: {file_id}")
 
                 if file_id in ids:
