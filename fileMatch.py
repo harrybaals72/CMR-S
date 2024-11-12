@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 def get_ids_from_db(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT id FROM posts")
+    cursor.execute("SELECT post_id FROM posts")
     ids = [str(row[0]).strip() for row in cursor.fetchall()]
     conn.close()
     return ids
@@ -61,7 +61,7 @@ def search_directory_for_ids(directory, ids, conn):
                         WHERE rowid = (
                             SELECT rowid
                             FROM posts
-                            WHERE id = ? AND filename IS NULL
+                            WHERE post_id = ? AND filename IS NULL
                             LIMIT 1
                         )
                     ''', (file, file_id))
