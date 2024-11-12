@@ -9,18 +9,19 @@ def create_or_update_db(data, db_path):
         CREATE TABLE IF NOT EXISTS posts (
             id INTEGER PRIMARY KEY,
             date TEXT,
-            full_url TEXT,
             text TEXT,
+            mediaType INTEGER,
+            filename TEXT,
             downloaded INTEGER DEFAULT 0
         )
     ''')
     
     # Insert new entries
-    for post_id, date, full_url in data:
+    for post_id, date, text, filename, path, mediaType in data:
         cursor.execute('''
-            INSERT OR IGNORE INTO posts (id, date, full_url, text, downloaded)
-            VALUES (?, ?, ?, NULL, 0)
-        ''', (post_id, date, full_url))
+            INSERT OR IGNORE INTO posts (id, date, text, filename, mediaType, downloaded)
+            VALUES (?, ?, ?, ?, ?, 0)
+        ''', (post_id, date, text, filename, mediaType))
     
     conn.commit()
     conn.close()
