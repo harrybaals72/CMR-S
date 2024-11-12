@@ -1,35 +1,47 @@
 import requests
 import logging
+from time import sleep
 
 from utilities import processText
 
 logger = logging.getLogger(__name__)
 
-def get_posts_from_api(api_url, offset):
+def send_get_request(url):
+    try:
+        logger.debug(f"Sending GET request to: {url}")
+        response = requests.get(url)
+        response.raise_for_status() # Raise an exception for 4xx/5xx status codes
+        data = response.json() # Parse the JSON response
+        logger.debug(f"Data received from API: {data}, Size: {len(data)}")
+        return data
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"HTTP error occurred: {err}")
+    except Exception as err:
+        logger.error(f"An error occurred: {err}")
+    return None
+
+def get_profile_name(api_url):
+    data = send_get_request(api_url + "/profile")
+    return data.get('name') if data else None
+
+def get_posts_from_api(api_url, cleaned_url, offset, delay):
     postsRemaining = True
     posts_list = []
 
     while postsRemaining:
         url = f"{api_url}?o={offset}"
         offset += 50
-        try:
-            logger.debug(f"Sending GET request to: {url}")
-            response = requests.get(url)
-            response.raise_for_status() # Raise an exception for 4xx/5xx status codes
-            data = response.json() # Parse the JSON response
-            logger.debug(f"Data received from API: {data}, Size: {len(data)}")
 
-            if not data:
-                logger.debug("Response is an empty array, ending search")
-                postsRemaining = False
-                continue
-            else:
-                logger.debug("Response is not empty, processing data")
-                posts_list.extend(processResponse(data))
-        except requests.exceptions.HTTPError as err:
-            logger.error(f"HTTP error occurred: {err}")
-        except Exception as err:
-            logger.error(f"An error occurred: {err}")
+        data = send_get_request(url)
+
+        if not data:
+            logger.debug("Response is an empty array, ending search")
+            postsRemaining = False
+            continue
+        else:
+            logger.debug("Response is not empty, processing data")
+            posts_list.extend(processResponse(data, cleaned_url))
+            sleep(delay)
     
     # logger.debug(f"Posts list: {posts_list}")
     logger.debug(f"Total posts found: {len(posts_list)}")
@@ -41,7 +53,7 @@ def is_non_image_file(file_obj):
     file_name = file_obj.get('name', '').lower()
     return not any(file_name.endswith(ext) for ext in image_extensions)
     
-def processResponse(data):
+def processResponse(data, cleaned_url):
     posts_list = []
     for post in data:
         # Check if 'file' exists and is not empty
@@ -52,6 +64,7 @@ def processResponse(data):
         post_id = post.get('id')
         text = post.get('content')
         date = post.get('published')
+        url = f"{cleaned_url}/{post_id}"
 
         text = processText(text)
         
@@ -72,17 +85,19 @@ def processResponse(data):
                 for file in non_image_files:
                     print(f"Filename: {file.get('name')}")
                     filename = file.get('name')
-                    path = file.get('path')
-                    posts_list.append((post_id, date, text, filename, path, 1))
+                    posts_list.append((post_id, date, text, filename, url, 2))
                     logger.info("Post added:")
                     logger.info(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}\n\n")
             else:
                 logger.debug(f"No video files found for ID {post.get('id')}")
-                posts_list.append((post_id, date, text, None, None, 0))
+                if file_present:
+                    posts_list.append((post_id, date, text, post.get('file').get('name'), url, 1))
+                elif attachments_present:
+                    posts_list.append((post_id, date, text, post.get('attachments')[0].get('name'), url, 1))
                 
         else:
             logger.debug(f"No files or attachments found for ID {post.get('id')}")
-            posts_list.append((post_id, date, text, None, None, 0))
+            posts_list.append((post_id, date, text, None, url, 0))
     
     return posts_list
     

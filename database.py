@@ -7,11 +7,12 @@ def create_or_update_db(data, db_path):
     # Create table if it doesn't exist
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS posts (
-            id INTEGER PRIMARY KEY,
+            id INTEGER,
             date TEXT,
             text TEXT,
+            filename TEXT PRIMARY KEY,
+            path TEXT,
             mediaType INTEGER,
-            filename TEXT,
             downloaded INTEGER DEFAULT 0
         )
     ''')
@@ -19,9 +20,9 @@ def create_or_update_db(data, db_path):
     # Insert new entries
     for post_id, date, text, filename, path, mediaType in data:
         cursor.execute('''
-            INSERT OR IGNORE INTO posts (id, date, text, filename, mediaType, downloaded)
-            VALUES (?, ?, ?, ?, ?, 0)
-        ''', (post_id, date, text, filename, mediaType))
+            INSERT OR IGNORE INTO posts (id, date, text, filename, path, mediaType, downloaded)
+            VALUES (?, ?, ?, ?, ?, ?, 0)
+        ''', (post_id, date, text, filename, path, mediaType))
     
     conn.commit()
     conn.close()
