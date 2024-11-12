@@ -44,7 +44,7 @@ def search_directory_for_ids(directory, ids):
     return matching_files
 
 def update_downloaded_status(db_path, file_path):
-    ids = get_ids_from_db(db_path)
+    # ids = get_ids_from_db(db_path)
     # matching_files = search_directory_for_ids(os.path.dirname(file_path), ids)
     matching_files = []
     for root, _, files in os.walk(os.path.dirname(file_path)):
