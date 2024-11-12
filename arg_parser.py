@@ -11,5 +11,6 @@ def parse_arguments():
     parser.add_argument('--no-scrape', action='store_true', help='Disable scraping (default: False)')
     parser.add_argument('-u', '--update', action='store_true', help='Update the database with local files')
     parser.add_argument('--file-path', type=str, default='/userData/', help='Local directory with files to match. Default is /userData/')
+    parser.add_argument('--overwrite', action='store_true', help='Overwrite the database if it already exists')
 
     return parser.parse_args()
