@@ -34,7 +34,7 @@ def extract_id_from_filename(filename):
         return match.group(1)
     return None
 
-def search_directory_for_ids(directory, ids):
+def search_directory_for_ids(directory, ids, conn):
     logger.debug(f"Searching directory: {directory}")
     matching_files = []
     matching_ids = []
@@ -48,8 +48,23 @@ def search_directory_for_ids(directory, ids):
 
                 if file_id in ids:
                     logger.debug(f"Match found for ID {file_id}")
+                    cursor = conn.cursor()
+                    # Update only one entry with the given id and path IS NULL
+                    cursor.execute('''
+                        UPDATE posts
+                        SET filename = ?
+                        WHERE rowid = (
+                            SELECT rowid
+                            FROM posts
+                            WHERE id = ? AND filename IS NULL
+                            LIMIT 1
+                        )
+                    ''', (file, file_id))
+                    conn.commit()
+
                     matching_files.append(os.path.join(root, file))
                     matching_ids.append(file_id)
+        conn.close()
 
     matching_files.sort()
     matching_ids.sort(key=int)
@@ -70,7 +85,7 @@ def update_database(db_path, matching_ids):
 
     rows_updated = cursor.rowcount
     logger.info(f"Rows updated: {rows_updated}")
-    
+
     conn.commit()
     conn.close()
 
@@ -79,7 +94,9 @@ def update_downloaded_status(db_path, file_path):
     logger.debug(f"DB IDs: {ids}")
     logger.debug(f"Total DB IDs: {len(ids)}")
 
-    matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), ids)
+    conn = sqlite3.connect(db_path)
+
+    matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), ids, conn)
     
     logger.debug(f"Matching files: {matching_files}")
     logger.debug(f"Total matching files: {len(matching_files)}")
