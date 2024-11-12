@@ -35,6 +35,7 @@ def main():
     no_scrape = args.no_scrape
     update = args.update
     file_path = args.file_path
+    overwrite = args.overwrite
 
     parsed_url = urlparse(start_url)
     # Remove the query part by setting it to an empty string
@@ -68,7 +69,7 @@ def main():
         if not args.soft_run:
             # Insert data into the database
             logger.info("Inserting data into the database...")
-            create_or_update_db(all_links, db_path)
+            create_or_update_db(all_links, db_path, overwrite)
         else:
             logger.info("Soft run enabled. Skipping database write.")
     else:
