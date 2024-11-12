@@ -6,6 +6,7 @@ from urllib.parse import urlparse, urlunparse
 from arg_parser import parse_arguments
 from database import create_or_update_db
 from cm_api import get_posts_from_api, get_profile_name
+from fileMatch import update_downloaded_status
 
 args = parse_arguments()
 
@@ -33,6 +34,7 @@ def main():
     db_folder = args.output
     no_scrape = args.no_scrape
     update = args.update
+    file_path = args.file_path
 
     parsed_url = urlparse(start_url)
     # Remove the query part by setting it to an empty string
@@ -73,6 +75,7 @@ def main():
     
     if update:
         logger.info("Updating the database with local files...")
+        update_downloaded_status(db_path, file_path)
     else:
         logger.info("Database update disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")
 
