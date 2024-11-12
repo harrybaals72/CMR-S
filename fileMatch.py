@@ -84,7 +84,7 @@ def update_database(db_path, matching_ids):
     cursor.executemany('''
         UPDATE posts
         SET downloaded = 1
-        WHERE id = ?
+        WHERE post_id = ?
         AND mediaType = 2
     ''', [(post_id,) for post_id in matching_ids])
 
