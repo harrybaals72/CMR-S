@@ -38,8 +38,12 @@ def search_directory_for_ids(directory, ids):
     matching_files = []
     for root, _, files in os.walk(directory):
         for file in files:
+            logger.debug(f"\nChecking file: {file}")
             file_id = extract_id_from_filename(file)
+            logger.debug(f"Extracted ID: {file_id}")
+
             if file_id in ids:
+                logger.debug(f"Match found for ID {file_id}")
                 matching_files.append(os.path.join(root, file))
     return matching_files
 
