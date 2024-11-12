@@ -49,6 +49,9 @@ def search_directory_for_ids(directory, ids):
 
 def update_downloaded_status(db_path, file_path):
     ids = get_ids_from_db(db_path)
+    logger.debug(f"DB IDs: {ids}")
+    logger.debug(f"Total DB IDs: {len(ids)}")
+    
     matching_files = search_directory_for_ids(os.path.dirname(file_path), ids)
     
     logger.debug(f"Matching files: {matching_files}")
