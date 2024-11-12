@@ -9,5 +9,7 @@ def parse_arguments():
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output (set log level to DEBUG)')
     parser.add_argument('--log-level', type=str, default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         help='Set the logging level')
-    
+    parser.add_argument('--no-scrape', action='store_true', help='Disable scraping (default: False)')
+    parser.add_argument('-u', '--update', action='store_true', help='Update the database with local files')
+
     return parser.parse_args()

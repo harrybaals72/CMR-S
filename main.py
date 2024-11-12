@@ -31,6 +31,8 @@ def main():
     start_url = args.url
     delay = args.delay
     db_folder = args.output
+    no_scrape = args.no_scrape
+    update = args.update
 
     parsed_url = urlparse(start_url)
     # Remove the query part by setting it to an empty string
@@ -40,7 +42,6 @@ def main():
     
     base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
     path = cleaned_url.path
-
     api_url = f"{base_url}/api/v1{path}"
 
     logger.debug(f"Parsing URL: {start_url}")
@@ -51,29 +52,29 @@ def main():
 
     profile_name = get_profile_name(api_url)
     logger.info(f"Profile name: {profile_name}")
-    
-    db_path = os.path.join(db_folder, profile_name + '.db')
 
     # Create the output folder if it doesn't exist
     if not os.path.exists(db_folder):
         os.makedirs(db_folder)
+    db_path = os.path.join(db_folder, profile_name + '.db')
     
-    # Get data from the API
-    all_links = get_posts_from_api(api_url, url, 0, delay)
+    if not no_scrape:
+        # Get data from the API
+        all_links = get_posts_from_api(api_url, url, 0, delay)
 
-    # Print the data
-    logger.debug("Posts found:")
-    for post_id, date, text, filename, path, mediaType in all_links:
-        logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}, path: {path}, mediaType: {mediaType}\n")
-
-    logger.info(f"Total links found: {len(all_links)}")
-
-    if not args.soft_run:
-        # Insert data into the database
-        logger.info("Inserting data into the database...")
-        create_or_update_db(all_links, db_path)
+        if not args.soft_run:
+            # Insert data into the database
+            logger.info("Inserting data into the database...")
+            create_or_update_db(all_links, db_path)
+        else:
+            logger.info("Soft run enabled. Skipping database write.")
     else:
-        logger.info("Soft run enabled. Skipping database write.")
+        logger.info("Scraping disabled")
+    
+    if update:
+        logger.info("Updating the database with local files...")
+    else:
+        logger.info("Database update disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")
 
 if __name__ == '__main__':
     main()

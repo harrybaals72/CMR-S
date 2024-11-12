@@ -43,10 +43,13 @@ def get_posts_from_api(api_url, cleaned_url, offset, delay):
             posts_list.extend(processResponse(data, cleaned_url))
             sleep(delay)
     
-    # logger.debug(f"Posts list: {posts_list}")
+    # Print the data
     logger.debug(f"Total posts found: {len(posts_list)}")
+    for post_id, date, text, filename, path, mediaType in posts_list:
+        logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}, path: {path}, mediaType: {mediaType}\n")
+
+    logger.info(f"Total links found: {len(posts_list)}")
     return posts_list
-        
 
 def is_non_image_file(file_obj):
     image_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
@@ -64,7 +67,7 @@ def processResponse(data, cleaned_url):
         post_id = post.get('id')
         text = post.get('content')
         date = post.get('published')
-        url = f"{cleaned_url}/{post_id}"
+        url = f"{cleaned_url}/post/{post_id}"
 
         text = processText(text)
         
