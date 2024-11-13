@@ -10,4 +10,7 @@ def processText(text):
     modifiedText = modifiedText.replace('\n', ' ')
     modifiedText = modifiedText.strip()
     modifiedText = re.sub(' +', ' ', modifiedText)
+    modifiedText = modifiedText.replace('|', ' ')
+    modifiedText = modifiedText.replace('<', ' ')
+    modifiedText = modifiedText.replace('>', ' ')
     return modifiedText
