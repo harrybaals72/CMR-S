@@ -54,9 +54,16 @@ def search_directory_for_ids(directory, host_data_dir, ids, conn):
 
                 if file_id in ids:
                     if host_data_dir:
-                        folder_path = host_data_dir + os.path.basename(root)
+                        if root == directory:
+                            subDirName = ''
+                        else:
+                            subDirName = os.path.relpath(root, directory)
+                        folder_path = os.path.join(host_data_dir, subDirName)
+                        logger.debug(f"Subdirectory: {subDirName}")
                     else:
                         folder_path = root
+                    
+                    logger.debug(f"Folder path: {folder_path}")
 
                     logger.debug(f"Match found for ID {file_id} for file {file} in folder {folder_path}")
                     cursor = conn.cursor()

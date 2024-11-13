@@ -13,19 +13,6 @@ from generate import get_undownloaded_posts
 def main():
     args = parse_arguments()
 
-    # Determine the logging level
-    log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
-
-    configure_logging(log_level=log_level)
-
-    # Create a logger for main.py
-    logger = logging.getLogger(__name__)
-
-    host_data_dir = os.getenv('HOST_DATA_DIR')
-
-    if host_data_dir:
-        logger.info(f"Host data directory: {host_data_dir}")
-
     print(f"Parsing arguments: {args}")
 
     db_folder = args.db_path
@@ -34,6 +21,19 @@ def main():
     file_path = args.file_path
     overwrite = args.overwrite
     generate = args.generate
+
+    # Determine the logging level
+    log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
+
+    configure_logging(log_level=log_level, log_file=db_folder + '/scraper.log')
+
+    # Create a logger for main.py
+    logger = logging.getLogger(__name__)
+
+    host_data_dir = os.getenv('HOST_DATA_DIR')
+
+    if host_data_dir:
+        logger.info(f"Host data directory: {host_data_dir}")
 
     if args.url:
         start_url = args.url
