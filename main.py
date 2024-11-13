@@ -16,16 +16,6 @@ def main():
     # Determine the logging level
     log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
 
-    # # Configure logging
-    # logging.basicConfig(
-    #     level=log_level,  # Set the base logging level
-    #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    #     handlers=[
-    #         logging.FileHandler("app.log", encoding='utf-8'),  # Log to a file with UTF-8 encoding
-    #         logging.StreamHandler(sys.stdout)  # Log to the console
-    #     ]
-    # )
-
     configure_logging(log_level=log_level)
 
     # Create a logger for main.py
