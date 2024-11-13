@@ -29,7 +29,7 @@ def extract_id_from_filename(filename):
     Returns:
         str or None: The extracted numeric ID as a string, or None if no match is found.
     """
-    matches = re.findall(r'- (\d{7,}) -', filename)
+    matches = re.findall(r'- (\d{7,})', filename)
     logger.debug(f"Matches: {matches}")
     if matches:
         return matches[-1]
