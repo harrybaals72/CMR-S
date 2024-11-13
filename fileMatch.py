@@ -20,7 +20,7 @@ def extract_id_from_filename(filename):
 
     The function searches for a pattern in the filename that matches
     a sequence of 7 or more digits surrounded by hyphens and spaces.
-    If such a pattern is found, the numeric ID is returned as a string.
+    If such a pattern is found, the last numeric ID is returned as a string.
     If no match is found, the function returns None.
 
     Args:
@@ -29,9 +29,9 @@ def extract_id_from_filename(filename):
     Returns:
         str or None: The extracted numeric ID as a string, or None if no match is found.
     """
-    match = re.search(r'- (\d{7,}) -', filename)
-    if match:
-        return match.group(1)
+    matches = re.findall(r'- (\d{7,}) -', filename)
+    if matches:
+        return matches[-1]
     return None
 
 def search_directory_for_ids(directory, ids, conn):
