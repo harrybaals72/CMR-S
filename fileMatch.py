@@ -67,17 +67,20 @@ def search_directory_for_ids(directory, host_data_dir, ids, conn):
 
                     logger.debug(f"Match found for ID {file_id} for file {file} in folder {folder_path}")
                     cursor = conn.cursor()
-                    # Update only one entry with the given id and path IS NULL
+                    # Update the entry with the given id and filename IS NULL, or update the folder if the filename is found with a different folder
                     cursor.execute('''
                         UPDATE posts
-                        SET filename = ?, folder = ?
-                        WHERE rowid = (
-                            SELECT rowid
-                            FROM posts
-                            WHERE post_id = ? AND filename IS NULL
-                            LIMIT 1
-                        )
-                    ''', (file, folder_path, file_id))
+                        SET 
+                            filename = CASE 
+                                WHEN filename IS NULL THEN ? 
+                                ELSE filename 
+                            END,
+                            folder = CASE 
+                                WHEN filename IS NOT NULL AND folder != ? THEN ? 
+                                ELSE folder 
+                            END
+                        WHERE post_id = ?
+                    ''', (file, folder_path, folder_path, file_id))
                     conn.commit()
 
                     matching_files.append(os.path.join(root, file))
