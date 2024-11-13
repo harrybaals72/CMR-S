@@ -16,7 +16,7 @@ def parse_arguments():
     parser.add_argument('--soft-run', action='store_true', help='Run the scraper without writing to the database')
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output (set log level to DEBUG)')
     parser.add_argument('--log-level', type=str, default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], help='Set the logging level')
-    parser.add_argument('--no-scrape', action='store_true', help='Disable scraping (default: False)')
+    parser.add_argument('-n', '--no-scrape', action='store_true', help='Disable scraping (default: False)')
     parser.add_argument('-w', '--write', action='store_true', help='Write to the database with local files')
     parser.add_argument('--file-path', type=str, default='/userData/', help='Local directory with files to match. Default is /userData/')
     parser.add_argument('--overwrite', action='store_true', help='Overwrite the database if it already exists')
