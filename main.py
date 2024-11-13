@@ -7,6 +7,7 @@ from arg_parser import parse_arguments
 from database import create_or_update_db
 from cm_api import get_posts_from_api, get_profile_name
 from fileMatch import update_downloaded_status
+from generate import generate_crawljob
 
 args = parse_arguments()
 
@@ -29,19 +30,24 @@ logger = logging.getLogger(__name__)
 def main():
     print(f"Parsing arguments: {args}")
 
-    delay = args.delay
-    db_folder = args.output
+    db_folder = args.db_path
     no_scrape = args.no_scrape
     write = args.write
     file_path = args.file_path
     overwrite = args.overwrite
+    generate = args.generate
 
     if args.url:
         start_url = args.url
+    elif args.o:
+        start_url = f"https://coomer.su/onlyfans/user/{args.user}"
+    elif args.f:
+        start_url = f"https://coomer.su/fansly/user/{args.user}"
     else:
         start_url = f"https://coomer.su/{args.site}/user/{args.user}"
 
     parsed_url = urlparse(start_url)
+
     # Remove the query part by setting it to an empty string
     cleaned_url = parsed_url._replace(query='')
     
@@ -68,7 +74,7 @@ def main():
     
     if not no_scrape:
         # Get data from the API
-        all_links = get_posts_from_api(api_url, url, 0, delay)
+        all_links = get_posts_from_api(api_url, url, 0)
 
         if not args.soft_run:
             # Insert data into the database
@@ -83,7 +89,11 @@ def main():
         logger.info(f"Updating the database with local files from path {file_path}")
         update_downloaded_status(db_path, file_path)
     else:
-        logger.info("Database write disabled, run with -u argument to enable. Use --no-scrape to disable scraping.")
+        logger.info("Database write disabled, run with -w argument to enable. Use --no-scrape to disable scraping.")
+    
+    if generate:
+        logger.info("Generating a crawljob for undownloaded files")
+        generate_crawljob(db_path)
 
 if __name__ == '__main__':
     main()

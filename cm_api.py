@@ -24,7 +24,7 @@ def get_profile_name(api_url):
     data = send_get_request(api_url + "/profile")
     return data.get('name') if data else None
 
-def get_posts_from_api(api_url, cleaned_url, offset, delay):
+def get_posts_from_api(api_url, cleaned_url, offset):
     postsRemaining = True
     posts_list = []
 
@@ -41,7 +41,7 @@ def get_posts_from_api(api_url, cleaned_url, offset, delay):
         else:
             logger.debug("Response is not empty, processing data")
             posts_list.extend(processResponse(data, cleaned_url))
-            sleep(delay)
+            sleep(1)
     
     # Print the data
     logger.debug(f"Total posts found: {len(posts_list)}")
