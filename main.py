@@ -3,31 +3,34 @@ import logging
 import sys
 from urllib.parse import urlparse, urlunparse
 
+from log_config import configure_logging
 from arg_parser import parse_arguments
 from database import create_or_update_db
 from cm_api import get_posts_from_api, get_profile_name
 from fileMatch import update_downloaded_status
-from generate import generate_crawljob
-
-args = parse_arguments()
-
-# Determine the logging level
-log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
-
-# Configure logging
-logging.basicConfig(
-    level=log_level,  # Set the base logging level
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log", encoding='utf-8'),  # Log to a file with UTF-8 encoding
-        logging.StreamHandler(sys.stdout)  # Log to the console
-    ]
-)
-
-# Create a logger for main.py
-logger = logging.getLogger(__name__)
+from generate import get_undownloaded_posts
 
 def main():
+    args = parse_arguments()
+
+    # Determine the logging level
+    log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
+
+    # # Configure logging
+    # logging.basicConfig(
+    #     level=log_level,  # Set the base logging level
+    #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    #     handlers=[
+    #         logging.FileHandler("app.log", encoding='utf-8'),  # Log to a file with UTF-8 encoding
+    #         logging.StreamHandler(sys.stdout)  # Log to the console
+    #     ]
+    # )
+
+    configure_logging(log_level=log_level)
+
+    # Create a logger for main.py
+    logger = logging.getLogger(__name__)
+
     print(f"Parsing arguments: {args}")
 
     db_folder = args.db_path
@@ -92,8 +95,8 @@ def main():
         logger.info("Database write disabled, run with -w argument to enable. Use --no-scrape to disable scraping.")
     
     if generate:
-        logger.info("Generating a crawljob for undownloaded files")
-        generate_crawljob(db_path)
+        logger.info("Generating a file for undownloaded files")
+        get_undownloaded_posts(db_path, file_path, profile_name)
 
 if __name__ == '__main__':
     main()
