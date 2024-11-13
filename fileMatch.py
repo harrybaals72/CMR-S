@@ -53,19 +53,22 @@ def search_directory_for_ids(directory, ids, conn):
                 logger.debug(f"Extracted ID: {file_id}")
 
                 if file_id in ids:
-                    logger.debug(f"Match found for ID {file_id}")
+                    # Extract the folder path
+                    folder_path = os.path.basename(root)
+
+                    logger.debug(f"Match found for ID {file_id} for file {file} in folder {folder_path}")
                     cursor = conn.cursor()
                     # Update only one entry with the given id and path IS NULL
                     cursor.execute('''
                         UPDATE posts
-                        SET filename = ?
+                        SET filename = ?, folder = ?
                         WHERE rowid = (
                             SELECT rowid
                             FROM posts
                             WHERE post_id = ? AND filename IS NULL
                             LIMIT 1
                         )
-                    ''', (file, file_id))
+                    ''', (file, folder_path, file_id))
                     conn.commit()
 
                     matching_files.append(os.path.join(root, file))

@@ -45,8 +45,8 @@ def get_posts_from_api(api_url, cleaned_url, offset):
     
     # Print the data
     logger.debug(f"Total posts found: {len(posts_list)}")
-    for post_id, date, text, filename, path, mediaType in posts_list:
-        logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}, path: {path}, mediaType: {mediaType}\n")
+    for post_id, date, text, filename, folder, path, mediaType in posts_list:
+        logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, folder: {folder},text: {text}, path: {path}, mediaType: {mediaType}\n")
 
     logger.info(f"Total links found: {len(posts_list)}")
     return posts_list
@@ -90,19 +90,19 @@ def processResponse(data, cleaned_url):
                 for file in non_image_files:
                     print(f"Filename: {file.get('name')}")
                     filename = file.get('name')
-                    posts_list.append((post_id, date, text, None, url, 2))
+                    posts_list.append((post_id, date, text, None, None, url, 2))
                     logger.info("Post added:")
                     logger.info(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}\n\n")
             else:
                 logger.debug(f"No video files found for ID {post.get('id')}")
                 if file_present:
-                    posts_list.append((post_id, date, text, None, url, 1))
+                    posts_list.append((post_id, date, text, None, None, url, 1))
                 elif attachments_present:
-                    posts_list.append((post_id, date, text, None, url, 1))
+                    posts_list.append((post_id, date, text, None, None, url, 1))
                 
         else:
             logger.debug(f"No files or attachments found for ID {post.get('id')}")
-            posts_list.append((post_id, date, text, None, url, 0))
+            posts_list.append((post_id, date, text, None, None, url, 0))
     
     return posts_list
     

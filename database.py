@@ -20,6 +20,7 @@ def create_or_update_db(data, db_path, overwrite):
             date TEXT,
             text TEXT,
             filename TEXT,
+            folder TEXT,
             path TEXT,
             mediaType INTEGER,
             downloaded INTEGER DEFAULT 0
@@ -27,11 +28,11 @@ def create_or_update_db(data, db_path, overwrite):
     ''')
     
     # Insert new entries
-    for post_id, date, text, filename, path, mediaType in data:
+    for post_id, date, text, filename, folder, path, mediaType in data:
         cursor.execute('''
-            INSERT OR IGNORE INTO posts (post_id, date, text, filename, path, mediaType, downloaded)
-            VALUES (?, ?, ?, ?, ?, ?, 0)
-        ''', (post_id, date, text, filename, path, mediaType))
+            INSERT OR IGNORE INTO posts (post_id, date, text, filename, folder, path, mediaType, downloaded)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+        ''', (post_id, date, text, filename, folder, path, mediaType))
     
     conn.commit()
     conn.close()

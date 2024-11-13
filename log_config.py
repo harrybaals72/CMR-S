@@ -35,13 +35,4 @@ def configure_logging(log_level=logging.INFO, log_file="app.log"):
 
     # Configure the root logger
     logging.basicConfig(level=log_level, handlers=[console_handler, file_handler])
-
-# # Example usage of configuring logging
-# if __name__ == '__main__':
-#     configure_logging()
-#     logger = logging.getLogger(__name__)
-#     logger.debug("This is a debug message")
-#     logger.info("This is an info message")
-#     logger.warning("This is a warning message")
-#     logger.error("This is an error message")
-#     logger.critical("This is a critical message")
+    
