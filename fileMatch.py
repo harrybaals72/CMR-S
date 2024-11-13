@@ -54,7 +54,7 @@ def search_directory_for_ids(directory, ids, conn):
 
                 if file_id in ids:
                     # Extract the folder path
-                    folder_path = os.path.basename(root)
+                    folder_path = root
 
                     logger.debug(f"Match found for ID {file_id} for file {file} in folder {folder_path}")
                     cursor = conn.cursor()
