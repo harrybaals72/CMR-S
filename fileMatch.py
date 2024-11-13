@@ -72,8 +72,7 @@ def search_directory_for_ids(directory, ids, conn):
                     matching_ids.append(file_id)
 
     conn.close()
-    matching_files.sort()
-    matching_ids.sort(key=int)
+    
     return (matching_files, matching_ids)
 
 def update_database(db_path, matching_ids):
