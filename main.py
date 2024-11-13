@@ -21,6 +21,11 @@ def main():
     # Create a logger for main.py
     logger = logging.getLogger(__name__)
 
+    host_data_dir = os.getenv('HOST_DATA_DIR')
+
+    if host_data_dir:
+        logger.info(f"Host data directory: {host_data_dir}")
+
     print(f"Parsing arguments: {args}")
 
     db_folder = args.db_path
@@ -80,7 +85,7 @@ def main():
     
     if write:
         logger.info(f"Updating the database with local files from path {file_path}")
-        update_downloaded_status(db_path, file_path)
+        update_downloaded_status(db_path, file_path, host_data_dir)
     else:
         logger.info("Database write disabled, run with -w argument to enable. Use --no-scrape to disable scraping.")
     

@@ -35,7 +35,7 @@ def extract_id_from_filename(filename):
         return matches[-1]
     return None
 
-def search_directory_for_ids(directory, ids, conn):
+def search_directory_for_ids(directory, host_data_dir, ids, conn):
     logger.debug(f"Searching directory: {directory}")
     matching_files = []
     matching_ids = []
@@ -53,8 +53,10 @@ def search_directory_for_ids(directory, ids, conn):
                 logger.debug(f"Extracted ID: {file_id}")
 
                 if file_id in ids:
-                    # Extract the folder path
-                    folder_path = root
+                    if host_data_dir:
+                        folder_path = host_data_dir + os.path.basename(root)
+                    else:
+                        folder_path = root
 
                     logger.debug(f"Match found for ID {file_id} for file {file} in folder {folder_path}")
                     cursor = conn.cursor()
@@ -97,14 +99,14 @@ def update_database(db_path, matching_ids):
     conn.commit()
     conn.close()
 
-def update_downloaded_status(db_path, file_path):
+def update_downloaded_status(db_path, file_path, host_data_dir):
     ids = get_ids_from_db(db_path)
     logger.debug(f"DB IDs: {ids}")
     logger.debug(f"Total DB IDs: {len(ids)}")
 
     conn = sqlite3.connect(db_path)
 
-    matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), ids, conn)
+    matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), host_data_dir, ids, conn)
     
     logger.debug(f"Matching files: {matching_files}")
     logger.debug(f"Total matching files: {len(matching_files)}")
