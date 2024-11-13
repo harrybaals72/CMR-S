@@ -53,8 +53,10 @@ def get_posts_from_api(api_url, cleaned_url, offset):
 
 def is_non_image_file(file_obj):
     image_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
+    audio_extensions = {'.mp3', '.wav', '.aac', '.flac', '.ogg', '.wma', '.m4a'}
+    non_video_extensions = image_extensions | audio_extensions
     file_name = file_obj.get('name', '').lower()
-    return not any(file_name.endswith(ext) for ext in image_extensions)
+    return not any(file_name.endswith(ext) for ext in non_video_extensions)
     
 def processResponse(data, cleaned_url):
     posts_list = []
