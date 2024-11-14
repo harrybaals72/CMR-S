@@ -75,10 +75,21 @@ def create_or_update_db(data, db_path, overwrite):
     
     # Insert new entries
     for post_id, date, text, filename, folder, path, mediaType in data:
+        logger.debug(f"Checking if post ID {post_id} already exists in the database")
         cursor.execute('''
-            INSERT OR IGNORE INTO posts (post_id, date, text, filename, folder, path, mediaType, downloaded)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 0)
-        ''', (post_id, date, text, filename, folder, path, mediaType))
-    
+            SELECT COUNT(*) FROM posts
+            WHERE post_id = ? AND date = ? AND text = ?
+        ''', (post_id, date, text))
+        row_count = cursor.fetchone()[0]
+
+        if row_count == 0:
+            logger.debug(f"Inserting post ID {post_id} into the database")
+            cursor.execute('''
+                INSERT INTO posts (post_id, date, text, filename, folder, path, mediaType, downloaded)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+            ''', (post_id, date, text, filename, folder, path, mediaType))
+        else:
+            logger.debug(f"Post ID {post_id} already exists in the database, skipping insert")
+
     conn.commit()
     conn.close()
