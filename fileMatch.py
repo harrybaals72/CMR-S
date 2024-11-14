@@ -39,7 +39,7 @@ def search_directory_for_ids(directory, host_data_dir, ids, conn):
     logger.debug(f"Searching directory: {directory}")
     matching_files = []
     matching_ids = []
-    video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv')
+    video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', 'm4v')
     for root, _, files in os.walk(directory):
         for file in files:
             if file.lower().endswith(video_extensions):
