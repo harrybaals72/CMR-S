@@ -53,7 +53,7 @@ def main():
     
     base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
     path = cleaned_url.path
-    api_url = f"{base_url}/api/v0{path}"
+    api_url = f"{base_url}/api/v1{path}"
 
     logger.debug(f"Parsing URL: {start_url}")
     logger.info(f"URL: {url}")
