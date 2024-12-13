@@ -30,7 +30,7 @@ def parse_arguments():
     parser.add_argument('-g', '--generate', action='store_true', help='Generate a crawljob for undownloaded files')
 
     args = parser.parse_args()
-    logger.debug(f"Arguments: {args}")
+    logger.info(f"Arguments: {args}")
 
     # Custom validation logic
     if args.site and not args.user:

@@ -20,7 +20,7 @@ def create_or_update_db(data, db_path, overwrite):
         logger.debug("Table 'posts' exists")
     else:
         # Create the table if it doesn't exist
-        logger.debug("Table 'posts' does not exist. Creating a new table")
+        logger.info("Table 'posts' does not exist. Creating a new table")
         cursor.execute('''
             CREATE TABLE posts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

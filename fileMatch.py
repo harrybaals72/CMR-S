@@ -56,7 +56,7 @@ def update_file_path(conn, fileName, found_folder):
 
 		# Get the number of rows that have the localFileName that matches
 		row_count = len(folders)
-		logger.info(f"Found {row_count} row(s) with filename {fileName}")
+		logger.debug(f"Found {row_count} row(s) with filename {fileName}")
 
 		if row_count <= 1:
 			# Set db_folder to the folder found in the database if only one row is found, otherwise set it to None
@@ -83,7 +83,7 @@ def update_file_path(conn, fileName, found_folder):
 
 
 def search_and_update_directory_for_serverFileName_matches(db_path, serverFileNames, directory, host_data_dir):
-	logger.debug(f"Searching directory: {directory}")
+	logger.info(f"Searching directory: {directory}")
 	video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', 'm4v')
 
 	conn = sqlite3.connect(db_path)

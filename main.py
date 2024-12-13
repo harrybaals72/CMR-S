@@ -59,7 +59,7 @@ def main():
     logger.info(f"URL: {url}")
     logger.debug(f"Base URL: {base_url}")
     logger.debug(f"Path: {path}")
-    logger.debug(f"API URL: {api_url}\n")
+    logger.info(f"API URL: {api_url}\n")
 
     profile_name = get_profile_name(api_url)
     logger.info(f"Profile name: {profile_name}")

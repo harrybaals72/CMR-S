@@ -44,11 +44,10 @@ def get_posts_from_api(api_url, cleaned_url, offset):
             sleep(1)
     
     # Print the data
-    logger.debug(f"Total posts found: {len(posts_list)}")
     for post_id, date, text, filename, folder, path, mediaType in posts_list:
         logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, folder: {folder},text: {text}, path: {path}, mediaType: {mediaType}\n")
 
-    logger.info(f"Total links found: {len(posts_list)}")
+    logger.info(f"Total posts found: {len(posts_list)}")
     return posts_list
 
 def is_non_image_file(file_obj):
@@ -75,7 +74,7 @@ def processResponse(data, cleaned_url):
 
         files = []
         if file_present:
-            logger.info(f"File {post['file']} found for ID {post.get('id')}:")
+            logger.debug(f"File {post['file']} found for ID {post.get('id')}:")
             files.append(post['file'])
         else:
             logger.debug(f"No file found for ID {post.get('id')}")
