@@ -1,5 +1,4 @@
 import sqlite3
-import os
 
 def add_folder_column(cursor, db_path):
 	cursor.execute("PRAGMA table_info(posts)")
@@ -75,37 +74,3 @@ def add_serverPath_column(cursor, db_path):
 		# Rename the new table to the original table name
 		print(f"Renaming new table to 'posts'")
 		cursor.execute("ALTER TABLE posts_new RENAME TO posts")
-
-
-def process_db(db_path):
-	conn = sqlite3.connect(db_path)
-	cursor = conn.cursor()
-
-	# Check if the 'posts' table exists
-	cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='posts'")
-	table_exists = cursor.fetchone()
-	
-	if table_exists:
-		add_folder_column(cursor, db_path)
-		print("")
-		add_serverPath_column(cursor, db_path)
-		conn.commit()
-	else:
-		print(f"Table 'posts' does not exist in {db_path}")
-		
-	print("-------------------------------")
-	print("")
-	conn.close()
-
-
-def main():
-	folder_path = './'
-	for filename in os.listdir(folder_path):
-		if filename.endswith('.db'):
-			db_path = os.path.join(folder_path, filename)
-			
-			# print(f"Processing {db_path}")
-			process_db(db_path)
-
-if __name__ == "__main__":
-	main()

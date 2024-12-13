@@ -139,12 +139,11 @@ def update_database(db_path, matching_ids):
     conn.close()
 
 def update_downloaded_status(db_path, file_path, host_data_dir):
-    ids = get_ids_from_db(db_path)
-    logger.debug(f"DB IDs: {ids}")
-    logger.debug(f"Total DB IDs: {len(ids)}")
+    filenames = get_filenames_from_db(db_path)
+    logger.debug(f"DB filenames: {filenames}")
+    logger.debug(f"Total DB filenames: {len(filenames)}")
 
     conn = sqlite3.connect(db_path)
-
     matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), host_data_dir, ids, conn)
     
     logger.debug(f"Matching files: {matching_files}")
@@ -154,3 +153,19 @@ def update_downloaded_status(db_path, file_path, host_data_dir):
     logger.debug(f"Total matching IDs: {len(matching_ids)}")
 
     update_database(db_path, matching_ids)
+
+    # ids = get_ids_from_db(db_path)
+    # logger.debug(f"DB IDs: {ids}")
+    # logger.debug(f"Total DB IDs: {len(ids)}")
+
+    # conn = sqlite3.connect(db_path)
+
+    # matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), host_data_dir, ids, conn)
+    
+    # logger.debug(f"Matching files: {matching_files}")
+    # logger.debug(f"Total matching files: {len(matching_files)}")
+    
+    # logger.debug(f"Matching IDs: {matching_ids}")
+    # logger.debug(f"Total matching IDs: {len(matching_ids)}")
+
+    # update_database(db_path, matching_ids)
