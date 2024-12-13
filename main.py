@@ -1,6 +1,5 @@
 import os
 import logging
-import sys
 from urllib.parse import urlparse, urlunparse
 
 from log_config import configure_logging
@@ -13,6 +12,11 @@ from generate import generate_undownloaded_post_links
 def main():
     args = parse_arguments()
 
+    # Determine the logging level
+    log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
+    configure_logging(log_level=log_level, log_file=db_folder + '/scraper.log')
+    logger = logging.getLogger(__name__)
+
     print(f"Parsing arguments: {args}")
 
     db_folder = args.db_path
@@ -21,14 +25,6 @@ def main():
     file_path = args.file_path
     overwrite = args.overwrite
     generate = args.generate
-
-    # Determine the logging level
-    log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
-
-    configure_logging(log_level=log_level, log_file=db_folder + '/scraper.log')
-
-    # Create a logger for main.py
-    logger = logging.getLogger(__name__)
 
     host_data_dir = os.getenv('HOST_DATA_DIR')
 

@@ -5,9 +5,29 @@ from colorama import Fore, Style, init
 # Initialize colorama
 init(autoreset=True)
 
+# Define custom log levels
+TRACE_LEVEL_NUM = 5
+VERBOSE_LEVEL_NUM = 15
+
+logging.addLevelName(TRACE_LEVEL_NUM, "TRACE")
+logging.addLevelName(VERBOSE_LEVEL_NUM, "VERBOSE")
+
+def trace(self, message, *args, **kws):
+    if self.isEnabledFor(TRACE_LEVEL_NUM):
+        self._log(TRACE_LEVEL_NUM, message, args, **kws)
+
+def verbose(self, message, *args, **kws):
+    if self.isEnabledFor(VERBOSE_LEVEL_NUM):
+        self._log(VERBOSE_LEVEL_NUM, message, args, **kws)
+
+logging.Logger.trace = trace
+logging.Logger.verbose = verbose
+
+# Define color mappings for different log levels
 class ColoredFormatter(logging.Formatter):
-    # Define color mappings for different log levels
     COLORS = {
+        TRACE_LEVEL_NUM: Fore.MAGENTA,
+        VERBOSE_LEVEL_NUM: Fore.CYAN,
         logging.DEBUG: Fore.BLUE,
         logging.INFO: Fore.GREEN,
         logging.WARNING: Fore.YELLOW,
@@ -16,7 +36,6 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
-        # Apply color to the log level name
         color = self.COLORS.get(record.levelno, Fore.WHITE)
         record.levelname = color + record.levelname + Style.RESET_ALL
         return super().format(record)
