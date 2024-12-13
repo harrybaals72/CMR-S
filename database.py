@@ -4,7 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__) 
 
-def add_folder_and_serverPath_columns(cursor):
+def add_folder_column(cursor):
     cursor.execute("PRAGMA table_info(posts)")
     columns = [column[1] for column in cursor.fetchall()]
 
@@ -56,8 +56,8 @@ def create_or_update_db(data, db_path, overwrite):
     if table_exists:
         logger.debug("Table 'posts' exists")
 
-        # Check if the 'folder' and 'serverPath' columns exists, add them if they don't
-        add_folder_and_serverPath_columns(cursor)
+        # Check if the 'folder' column exists
+        add_folder_column(cursor)
 
     else:
         # Create the table if it doesn't exist
