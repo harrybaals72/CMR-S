@@ -74,6 +74,21 @@ def processResponse(data, cleaned_url):
         text = processText(text)
         if not text or not text.strip():
             text = None
+
+        files = []
+        if file_present:
+            logger.info(f"File {post['file']} found for ID {post.get('id')}:")
+            files.append(post['file'])
+        else:
+            logger.debug(f"No file found for ID {post.get('id')}")
+        
+        files.extend(post['attachments'])
+
+        for file in files:
+            if is_non_image_file(file):
+                logger.info(f"Non-image file found for ID {post.get('id')}: {file.get('name')}")
+                posts_list.append((post_id, date, text, file.get('name'), file.get('path'), None, url, 2))
+                
         
         if file_present or attachments_present:
             non_image_files = []
