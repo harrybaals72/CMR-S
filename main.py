@@ -12,7 +12,7 @@ from generate import generate_undownloaded_post_links
 def main():
     args = parse_arguments()
 
-    configure_logging(log_level=logging.INFO, log_file=db_folder + '/scraper.log')
+    configure_logging(log_level=logging.INFO)
 
     # Determine the logging level
     log_level = logging.DEBUG if args.verbose else getattr(logging, args.log_level)
