@@ -17,7 +17,8 @@ def main():
     configure_logging(log_level=log_level, log_file=db_folder + '/scraper.log')
     logger = logging.getLogger(__name__)
 
-    print(f"Parsing arguments: {args}")
+    # print(f"Parsing arguments: {args}")
+    logger.verbose(f"Parsing arguments: {args}")
 
     db_folder = args.db_path
     no_scrape = args.no_scrape
