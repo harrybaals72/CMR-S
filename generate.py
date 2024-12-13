@@ -13,7 +13,7 @@ def get_extension(filename):
 def write_urls_to_file(folder_path, rows, profile_name, current_time):
 	# Create the full file path using the profile name and current time
 	file_path = os.path.join(folder_path, f"{profile_name}_{current_time}.txt")
-	
+
 	logger.debug(f"Writing undownloaded URLs to file: {file_path}")
 	with open(file_path, 'w') as file:
 		for row in rows:
@@ -31,7 +31,7 @@ def write_urls_to_crawljob(folder_path, rows, profile_name, current_time):
 	logger.debug(f"Writing undownloaded URLs to file: {file_path}")
 	with open(file_path, 'w') as file:
 		for row in rows:
-			base_url = "coomer.su/data/"
+			base_url = "https://coomer.su/data/"
 			serverFileName, serverPath, *rest = row
 
 			full_url = urllib.parse.urljoin(base_url, serverPath)
