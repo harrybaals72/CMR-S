@@ -13,6 +13,13 @@ def get_ids_from_db(db_path):
     conn.close()
     return ids
 
+def get_filenames_from_db(db_path):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT filename FROM posts")
+    filenames = [row[0] for row in cursor.fetchall()] 
+    conn.close()
+    return filenames
 
 def extract_id_from_filename(filename):
     """
