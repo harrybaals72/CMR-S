@@ -8,7 +8,7 @@ from arg_parser import parse_arguments
 from database import create_or_update_db
 from cm_api import get_posts_from_api, get_profile_name
 from fileMatch import update_downloaded_status
-from generate import get_undownloaded_posts
+from generate import generate_undownloaded_post_links
 
 def main():
     args = parse_arguments()
@@ -91,7 +91,7 @@ def main():
     
     if generate:
         logger.info("Generating a file for undownloaded files")
-        get_undownloaded_posts(db_path, file_path, profile_name)
+        generate_undownloaded_post_links(db_path, file_path, profile_name)
 
 if __name__ == '__main__':
     main()

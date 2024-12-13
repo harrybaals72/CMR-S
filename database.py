@@ -58,3 +58,20 @@ def create_or_update_db(data, db_path, overwrite):
     conn.commit()
     cursor.close()  # Explicitly close the cursor
     conn.close()
+
+def get_undownloaded_video_posts_from_db(db_path):
+    logger.debug(f"Fetching undownloaded video posts from database: {db_path}")
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT DISTINCT serverFileName, serverPath, post_url
+        FROM posts
+        WHERE downloaded = 0
+        AND mediaType = 2
+    ''')
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
