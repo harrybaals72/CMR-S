@@ -63,13 +63,11 @@ def processResponse(data, cleaned_url):
     for post in data:
         # Check if 'file' exists and is not empty
         file_present = 'file' in post and bool(post['file'])
-        # # Check if 'attachments' exists and is not empty
-        # attachments_present = 'attachments' in post and bool(post['attachments'])
 
         post_id = post.get('id')
         text = post.get('content')
         date = post.get('published')
-        url = f"{cleaned_url}/post/{post_id}"
+        post_url = f"{cleaned_url}/post/{post_id}"
 
         text = processText(text)
         if not text or not text.strip():
@@ -87,45 +85,14 @@ def processResponse(data, cleaned_url):
         for file in files:
             if is_non_image_file(file):
                 logger.info(f"Non-image file found for ID {post.get('id')}: {file.get('name')}")
-                posts_list.append((post_id, date, text, file.get('name'), None, file.get('path'), url, 2))
+                posts_list.append((post_id, date, text, file.get('name'), file.get('path'), post_url, 2))
             else:
                 logger.debug(f"Picture found for ID {post.get('id')}: {file.get('name')}")
-                posts_list.append((post_id, date, text, file.get('name'), None, file.get('path'), url, 1))
+                posts_list.append((post_id, date, text, file.get('name'), file.get('path'), post_url, 1))
         
         if not files:
             logger.debug(f"No files found for ID {post.get('id')}")
-            posts_list.append((post_id, date, text, None, None, None, url, 0))
-                
-        # if file_present or attachments_present:
-        #     non_image_files = []
-
-        #     if file_present and is_non_image_file(post['file']):
-        #         non_image_files.append(post['file'])
-
-        #     if attachments_present:
-        #         non_image_files.extend(
-        #             attachment for attachment in post['attachments'] if is_non_image_file(attachment)
-        #         )
-            
-        #     if non_image_files:
-        #         logger.info(f"Video files found for ID {post.get('id')}:")
-
-        #         for file in non_image_files:
-        #             print(f"Filename: {file.get('name')}")
-        #             filename = file.get('name')
-        #             posts_list.append((post_id, date, text, None, None, url, 2))
-        #             logger.info("Post added:")
-        #             logger.info(f"ID: {post_id}, Date: {date}, Filename: {filename}, text: {text}\n\n")
-        #     else:
-        #         logger.debug(f"No video files found for ID {post.get('id')}")
-        #         if file_present:
-        #             posts_list.append((post_id, date, text, None, None, url, 1))
-        #         elif attachments_present:
-        #             posts_list.append((post_id, date, text, None, None, url, 1))
-                
-        # else:
-        #     logger.debug(f"No files or attachments found for ID {post.get('id')}")
-        #     posts_list.append((post_id, date, text, None, None, url, 0))
+            posts_list.append((post_id, date, text, None, None, post_url, 0))
     
     return posts_list
     
