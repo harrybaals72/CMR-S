@@ -119,31 +119,53 @@ def search_directory_for_ids(directory, host_data_dir, ids, conn):
 	
 	return (matching_files, matching_ids)
 
-def update_file_path(db_path, fileName, found_folder):
-	conn = sqlite3.connect(db_path)
+def update_file_path(conn, fileName, found_folder):
 	cursor = conn.cursor()
 
-	# Check if a row with the same filename but a different folder exists
-	cursor.execute('''
-		SELECT COUNT(*) FROM posts
-		WHERE localFileName = ? AND folder != ?
-	''', (fileName, found_folder))
-	row_count = cursor.fetchone()[0]
-
-	if row_count == 1:
-		# Update the folder for the matching row
+	try:
+		# Select rows where the localFileName matches and return the folder(s) found
 		cursor.execute('''
-			UPDATE posts
-			SET folder = ?
+			SELECT folder FROM posts
 			WHERE localFileName = ?
-		''', (found_folder, fileName))
-		logger.info(f"Updated folder for filename {fileName} to {found_folder}")
+			AND folder IS NOT NULL
+		''', (fileName,))
+		folders = cursor.fetchall()
 
-def search_directory_for_serverFileName_matches(db_path, serverFileNames, directory, host_data_dir):
+		# Get the number of rows that have the localFileName that matches
+		row_count = len(folders)
+		logger.info(f"Found {row_count} row(s) with filename {fileName}")
+
+		if row_count <= 1:
+			# Set db_folder to the folder found in the database if only one row is found, otherwise set it to None
+			db_folder = folders[0][0] if row_count == 1 else None
+
+			# If the folder in the database is different from the found folder, update the folder
+			if db_folder != found_folder:
+				cursor.execute('''
+					UPDATE posts
+					SET folder = ?
+					WHERE localFileName = ?
+				''', (found_folder, fileName))
+				conn.commit()
+
+				logger.info(f"Updated folder for filename {fileName} from {db_folder} to {found_folder}")
+		else:
+			logger.error(f"Multiple rows found for filename {fileName} at {folders} Skipping update")
+	except sqlite3.Error as e:
+			logger.error(f"Database error: {e}")
+	except Exception as e:
+			logger.error(f"Unexpected error: {e}")
+	finally:
+		cursor.close()
+
+
+def search_and_update_directory_for_serverFileName_matches(db_path, serverFileNames, directory, host_data_dir):
 	logger.debug(f"Searching directory: {directory}")
 	matching_files = []
 	matching_ids = []
 	video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv', 'm4v')
+
+	conn = sqlite3.connect(db_path)
 
 	for root, _, files in os.walk(directory):
 		for file in files:
@@ -163,6 +185,8 @@ def search_directory_for_serverFileName_matches(db_path, serverFileNames, direct
 					
 					logger.debug(f"Folder path: {folder_path}")
 					logger.debug(f"Match found for filename {file} in folder {folder_path}")
+
+					update_file_path(conn, file, folder_path)
 
 					
 
@@ -191,7 +215,7 @@ def update_downloaded_status(db_path, file_path, host_data_dir):
 	logger.debug(f"Total DB serverFileNames: {len(serverFileNames)}")
 
 	# matching_files, matching_ids = search_directory_for_ids(os.path.dirname(file_path), host_data_dir, ids, conn)
-	search_directory_for_serverFileName_matches(db_path, serverFileNames, os.path.dirname(file_path), host_data_dir)
+	search_and_update_directory_for_serverFileName_matches(db_path, serverFileNames, os.path.dirname(file_path), host_data_dir)
 	
 	logger.debug(f"Matching files: {matching_files}")
 	logger.debug(f"Total matching files: {len(matching_files)}")
