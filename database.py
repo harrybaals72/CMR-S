@@ -72,15 +72,15 @@ def update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, 
 
 
 def update_db(conn, data):
-	cursor = conn.cursor()
-
 	for post_id, date, text, serverFileName, serverPath, post_url, mediaType in data:
+		cursor = conn.cursor()
 		# Check if a row with a matching post_id and serverFileName is already exists in the database
 		cursor.execute('''
 			SELECT * FROM posts
 			WHERE post_id = ? AND serverFileName = ?
 		''', (post_id, serverFileName))
 		rows = cursor.fetchall()
+		cursor.close()  # Close the cursor before updating the row
 
 		if len(rows) == 0:
 			logger.debug(f"No rows found with post ID {post_id} and serverFileName {serverFileName}, inserting new row")
@@ -92,8 +92,10 @@ def update_db(conn, data):
 			logger.error(f"Multiple rows found with post ID {post_id} and serverFileName {serverFileName}, skipping update")
 			raise Exception(f"Multiple rows found with post ID {post_id} and serverFileName {serverFileName}, which is unexpected.")
 		
+		cursor.close()  # Explicitly close the cursor
+		
 	conn.commit()
-	cursor.close()  # Explicitly close the cursor
+	
 	################################### END OF UPDATE_DB ###################################
 
 
