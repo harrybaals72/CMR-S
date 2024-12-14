@@ -13,6 +13,8 @@ def send_get_request(url):
 		response.raise_for_status() # Raise an exception for 4xx/5xx status codes
 		data = response.json() # Parse the JSON response
 		logger.debug(f"Data received from API: {data}, Size: {len(data)}")
+		if '?o=0' in url:
+			print("RESPONSE FROM ?o=0: ", data)
 		return data
 	except requests.exceptions.HTTPError as err:
 		logger.error(f"HTTP error occurred: {err}")
