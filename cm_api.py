@@ -71,8 +71,6 @@ def processResponse(data, cleaned_url):
 		# logger.warning(f"Post ID: {post.get('id')}")
 		if post_id != "1007971278":
 			break
-		logger.setLevel(logging.DEBUG)
-
 
 		text = post.get('content')
 		date = post.get('published')
