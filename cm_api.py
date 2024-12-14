@@ -65,6 +65,13 @@ def processResponse(data, cleaned_url):
 		# Check if 'file' exists and is not empty
 		file_present = 'file' in post and bool(post['file'])
 
+
+
+		if post_id == 1007971278:
+			logger.warning(f"/tReached post ID 1007971278. Files: {post['file']}\nAttachments: {post['attachments']}")
+			logger.warning(f"/tFiles present: {file_present}")
+
+
 		logger.warning(f"Post ID: {post.get('id')}")
 		post_id = post.get('id')
 		text = post.get('content')
@@ -96,8 +103,4 @@ def processResponse(data, cleaned_url):
 			logger.debug(f"No files found for ID {post.get('id')}")
 			posts_list.append((post_id, date, text, None, None, post_url, 0))
 		
-		if post_id == 1007971278:
-			logger.warning(f"/tReached post ID 1007971278. Files: {post['file']}\nAttachments: {post['attachments']}")
-			logger.warning(f"/tFiles present: {file_present}")
-
 	return posts_list
