@@ -66,14 +66,17 @@ def processResponse(data, cleaned_url):
 		file_present = 'file' in post and bool(post['file'])
 
 		post_id = post.get('id')
+
+
+		# logger.warning(f"Post ID: {post.get('id')}")
+		if post_id != "1007971278":
+			break
+		logger.setLevel(logging.DEBUG)
+
+
 		text = post.get('content')
 		date = post.get('published')
 		post_url = f"{cleaned_url}/post/{post_id}"
-
-		logger.warning(f"Post ID: {post.get('id')}")
-		if post_id == "1007971278":
-			logger.warning(f"/tReached post ID 1007971278. Files: {post['file']}\nAttachments: {post['attachments']}")
-			logger.warning(f"/tFiles present: {file_present}")
 
 		text = processText(text)
 		if not text or not text.strip():
@@ -81,9 +84,13 @@ def processResponse(data, cleaned_url):
 
 		files = []
 		if file_present:
+			# logger.warning(f"File {post['file']} found for ID {post.get('id')}:")
+
 			logger.debug(f"File {post['file']} found for ID {post.get('id')}:")
 			files.append(post['file'])
 		else:
+			# logger.warning(f"No file found for ID {post.get('id')}")
+
 			logger.debug(f"No file found for ID {post.get('id')}")
 
 		files.extend(post['attachments'])
