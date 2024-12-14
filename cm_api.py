@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 
 def send_get_request(url):
 	try:
-		logger.warning(f"Sending GET request to: {url}")
+		logger.debug(f"Sending GET request to: {url}")
 		response = requests.get(url)
 		response.raise_for_status() # Raise an exception for 4xx/5xx status codes
 		data = response.json() # Parse the JSON response
-		logger.debug(f"Data received from API: {data}, Size: {len(data)}")
+		# logger.debug(f"Data received from API: {data}, Size: {len(data)}")
 		return data
 	except requests.exceptions.HTTPError as err:
 		logger.error(f"HTTP error occurred: {err}")
@@ -70,6 +70,7 @@ def processResponse(data, cleaned_url):
 
 		# logger.warning(f"Post ID: {post.get('id')}")
 		if post_id != "1007971278":
+			logger.debug(f"Post ID: {post_id} does not match, skipping")
 			break
 
 		text = post.get('content')
