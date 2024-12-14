@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 def send_get_request(url):
 	try:
-		logger.debug(f"Sending GET request to: {url}")
+		logger.warning(f"Sending GET request to: {url}")
 		response = requests.get(url)
 		response.raise_for_status() # Raise an exception for 4xx/5xx status codes
 		data = response.json() # Parse the JSON response
