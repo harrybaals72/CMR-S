@@ -43,6 +43,8 @@ def get_posts_from_api(api_url, cleaned_url, offset):
 			posts_list.extend(processResponse(data, cleaned_url))
 			sleep(1)
 
+			postsRemaining = False
+
 	# Print the data
 	for post_id, date, text, filename, folder, path, mediaType in posts_list:
 		logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, folder: {folder},text: {text}, path: {path}, mediaType: {mediaType}\n")
@@ -63,6 +65,7 @@ def processResponse(data, cleaned_url):
 		# Check if 'file' exists and is not empty
 		file_present = 'file' in post and bool(post['file'])
 
+		logger.warning(f"Post ID: {post.get('id')}")
 		post_id = post.get('id')
 		text = post.get('content')
 		date = post.get('published')
