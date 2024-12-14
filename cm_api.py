@@ -60,7 +60,7 @@ def is_non_image_file(file_obj):
 	return not any(file_name.endswith(ext) for ext in non_video_extensions)
 
 def processResponse(data, cleaned_url):
-	logger.debug(f"\n\nProcessing response data: {data}")
+	# logger.debug(f"\n\nProcessing response data: {data}")
 	posts_list = []
 	for post in data:
 		# Check if 'file' exists and is not empty
@@ -69,10 +69,10 @@ def processResponse(data, cleaned_url):
 		post_id = post.get('id')
 
 
-		# logger.warning(f"Post ID: {post.get('id')}")
+		logger.warning(f"Post ID: {post.get('id')}")
 		if post_id != "1007971278":
 			logger.debug(f"Post ID: {post_id} does not match, skipping")
-			break
+			continue
 
 		text = post.get('content')
 		date = post.get('published')
