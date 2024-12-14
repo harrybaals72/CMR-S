@@ -83,7 +83,7 @@ def processResponse(data, cleaned_url):
 
 		for file in files:
 			if is_non_image_file(file):
-				logger.info(f"Non-image file found for ID {post.get('id')}: {file.get('name')}")
+				logger.debug(f"Non-image file found for ID {post.get('id')}: {file.get('name')}")
 				posts_list.append((post_id, date, text, file.get('name'), file.get('path'), post_url, 2))
 			else:
 				logger.debug(f"Picture found for ID {post.get('id')}: {file.get('name')}")

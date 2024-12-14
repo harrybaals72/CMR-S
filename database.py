@@ -4,11 +4,12 @@ import logging
 
 logger = logging.getLogger(__name__) 
 
-def create_db(db_path, conn, overwrite):
+def create_db(db_path, overwrite):
 	if overwrite and os.path.exists(db_path):
 		logger.info(f"Deleting existing database at {db_path}")
 		os.remove(db_path)
 
+	conn = sqlite3.connect(db_path)
 	cursor = conn.cursor()
 
 	# Check if the 'posts' table exists
@@ -38,6 +39,7 @@ def create_db(db_path, conn, overwrite):
 		conn.commit()
 	
 	cursor.close()  # Explicitly close the cursor
+	conn.close()
 	################################### END OF CREATE_DB ###################################
 
 
@@ -96,10 +98,11 @@ def update_db(conn, data):
 
 
 def create_or_update_db(data, db_path, overwrite):
+	create_db(db_path, overwrite)
+
 	conn = sqlite3.connect(db_path)
 	conn.row_factory = sqlite3.Row
 
-	create_db(db_path, conn, overwrite)
 	update_db(conn, data)
 	conn.close()
 	################################### END OF CREATE_OR_UPDATE_DB ###################################
