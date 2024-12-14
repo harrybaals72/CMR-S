@@ -74,6 +74,10 @@ def update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, 
 def update_db(conn, data):
 	for post_id, date, text, serverFileName, serverPath, post_url, mediaType in data:
 		cursor = conn.cursor()
+
+		if post_id != 653396777:
+			continue
+
 		# Check if a row with a matching post_id and serverFileName is already exists in the database
 		cursor.execute('''
 			SELECT * FROM posts
