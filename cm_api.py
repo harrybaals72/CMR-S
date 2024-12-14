@@ -42,8 +42,8 @@ def get_posts_from_api(api_url, cleaned_url, offset):
 			logger.debug("Response is not empty, processing data")
 			posts_list.extend(processResponse(data, cleaned_url))
 			sleep(1)
+			break
 
-			postsRemaining = False
 
 	# Print the data
 	for post_id, date, text, filename, folder, path, mediaType in posts_list:
@@ -60,6 +60,7 @@ def is_non_image_file(file_obj):
 	return not any(file_name.endswith(ext) for ext in non_video_extensions)
 
 def processResponse(data, cleaned_url):
+	logger.debug(f"\n\nProcessing response data: {data}")
 	posts_list = []
 	for post in data:
 		# Check if 'file' exists and is not empty
