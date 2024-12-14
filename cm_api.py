@@ -13,8 +13,6 @@ def send_get_request(url):
 		response.raise_for_status() # Raise an exception for 4xx/5xx status codes
 		data = response.json() # Parse the JSON response
 		logger.debug(f"Data received from API: {data}, Size: {len(data)}")
-		if '?o=0' in url:
-			print("RESPONSE FROM ?o=0: ", data)
 		return data
 	except requests.exceptions.HTTPError as err:
 		logger.error(f"HTTP error occurred: {err}")
@@ -94,5 +92,9 @@ def processResponse(data, cleaned_url):
 		if not files:
 			logger.debug(f"No files found for ID {post.get('id')}")
 			posts_list.append((post_id, date, text, None, None, post_url, 0))
+		
+		if post_id == 1007971278:
+			logger.warning(f"/tReached post ID 1007971278. Files: {post['file']}\nAttachments: {post['attachments']}")
+			logger.warning(f"/tFiles present: {file_present}")
 
 	return posts_list
