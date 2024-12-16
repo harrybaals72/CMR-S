@@ -59,7 +59,7 @@ def insert_new_row(conn, post_id, date, text, serverFileName, serverPath, post_u
 def update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, mediaType):
 	cursor = conn.cursor()
 
-	logger.debug(f"Updating row with post ID {post_id}, serverFileName {serverFileName} in the database")
+	logger.debug(f"Updating row with post ID {post_id}, serverFileName {serverFileName} in the database \n")
 	cursor.execute('''
 		UPDATE posts
 		SET date = ?, text = ?, serverFileName = ?, serverPath = ?, post_url = ?, mediaType = ?
