@@ -47,7 +47,7 @@ def get_posts_from_api(api_url, cleaned_url, offset):
 
 	# Print the data
 	for post_id, date, text, filename, folder, path, mediaType in posts_list:
-		logger.debug(f"ID: {post_id}, Date: {date}, Filename: {filename}, folder: {folder},text: {text}, path: {path}, mediaType: {mediaType}\n")
+		logger.debug(f"<Post Fetch posts_list:> ID: {post_id}, Date: {date}, Filename: {filename}, folder: {folder},text: {text}, path: {path}, mediaType: {mediaType}\n")
 
 	logger.info(f"Total posts found: {len(posts_list)}")
 	return posts_list
