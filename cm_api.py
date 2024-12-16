@@ -69,9 +69,9 @@ def processResponse(data, cleaned_url):
 		post_id = post.get('id')
 
 
-		logger.warning(f"Post ID: {post.get('id')}")
+		# logger.warning(f"Post ID: {post.get('id')}")
 		if post_id != "1007971278":
-			logger.debug(f"Post ID: {post_id} does not match, skipping")
+			# logger.debug(f"Post ID: {post_id} does not match, skipping")
 			continue
 
 		text = post.get('content')
