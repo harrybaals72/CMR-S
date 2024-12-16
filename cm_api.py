@@ -41,7 +41,7 @@ def get_posts_from_api(api_url, cleaned_url, offset):
 		else:
 			logger.debug("Response is not empty, processing data")
 			posts_list.extend(processResponse(data, cleaned_url))
-			sleep(1)
+			sleep(3)
 
 	# Print the data
 	for post_id, date, text, filename, folder, path, mediaType in posts_list:
