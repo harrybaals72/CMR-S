@@ -108,7 +108,7 @@ def update_db(conn, data):
 		cursor.close()  # Explicitly close the cursor
 		
 	conn.commit()
-	logger.info(f"\nInserted {inserted_count} new rows and updated {updated_count} rows.")
+	logger.info(f"\n\nInserted {inserted_count} new rows and updated {updated_count} rows.\n")
 	
 	################################### END OF UPDATE_DB ###################################
 
