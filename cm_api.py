@@ -68,12 +68,6 @@ def processResponse(data, cleaned_url):
 
 		post_id = post.get('id')
 
-
-		# logger.warning(f"Post ID: {post.get('id')}")
-		if post_id != "1007971278":
-			# logger.debug(f"Post ID: {post_id} does not match, skipping")
-			continue
-
 		text = post.get('content')
 		date = post.get('published')
 		post_url = f"{cleaned_url}/post/{post_id}"
@@ -84,12 +78,9 @@ def processResponse(data, cleaned_url):
 
 		files = []
 		if file_present:
-			# logger.warning(f"File {post['file']} found for ID {post.get('id')}:")
-
 			logger.debug(f"File {post['file']} found for ID {post.get('id')}:")
 			files.append(post['file'])
 		else:
-			# logger.warning(f"No file found for ID {post.get('id')}")
 
 			logger.debug(f"No file found for ID {post.get('id')}")
 
