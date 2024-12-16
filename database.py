@@ -78,11 +78,21 @@ def update_db(conn, data):
 	for post_id, date, text, serverFileName, serverPath, post_url, mediaType in data:
 		cursor = conn.cursor()
 
-		# Check if a row with a matching post_id and serverFileName is already exists in the database
-		cursor.execute('''
-			SELECT * FROM posts
-			WHERE post_id = ? AND serverFileName = ?
-		''', (post_id, serverFileName))
+		if mediaType == 0:
+			# Check if a row with a matching post_id
+			logger.debug(f"Media type is 0, checking for post ID {post_id}")
+			cursor.execute('''
+				SELECT * FROM posts
+				WHERE post_id = ?
+			''', (post_id, serverFileName))
+		else:
+			# Check if a row with a matching post_id and serverFileName is already exists in the database
+			logger.debug(f"Media type is not 0, checking for post ID {post_id} and serverFileName {serverFileName}")
+			cursor.execute('''
+				SELECT * FROM posts
+				WHERE post_id = ? AND serverFileName = ?
+			''', (post_id, serverFileName))
+			
 		rows = cursor.fetchall()
 		logger.debug(f"{len(rows)} rows returned for id: {post_id} and SFN: {serverFileName}")
 
