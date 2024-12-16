@@ -84,7 +84,13 @@ def update_db(conn, data):
 			WHERE post_id = ? AND serverFileName = ?
 		''', (post_id, serverFileName))
 		rows = cursor.fetchall()
+		# Print out the contents of rows
+		for row in rows:
+			logger.debug(f"\tRow return for id: {post_id} and SFN: {serverFileName} is {row}")
+
 		cursor.close()  # Close the cursor before updating the row
+
+		
 
 		if len(rows) == 0:
 			logger.debug(f"No rows found with post ID {post_id} and serverFileName {serverFileName}, inserting new row")
