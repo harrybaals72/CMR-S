@@ -84,7 +84,7 @@ def update_db(conn, data):
 			WHERE post_id = ? AND serverFileName = ?
 		''', (post_id, serverFileName))
 		rows = cursor.fetchall()
-		logger.debug(f"Rows returned for id: {post_id} and SFN: {serverFileName} is: {len(rows)}")
+		logger.debug(f"{len(rows)} rows returned for id: {post_id} and SFN: {serverFileName}")
 
 		cursor.close()  # Close the cursor before updating the row
 
