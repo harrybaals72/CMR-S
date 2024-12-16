@@ -46,34 +46,43 @@ def update_file_path(conn, fileName, found_folder):
 	cursor = conn.cursor()
 
 	try:
-		# Select rows where the localFileName matches and return the folder(s) found
+		# Update rows where severFileName matches
 		cursor.execute('''
-			SELECT folder FROM posts
-			WHERE localFileName = ?
-			AND folder IS NOT NULL
-		''', (fileName,))
-		folders = cursor.fetchall()
+			UPDATE posts
+			SET localFileName = ?, folder = ?, downloaded = 1
+			WHERE serverFileName = ?
+		''', (fileName, found_folder, fileName)) 
+		conn.commit()
+		logger.info(f"Updated folder for filename {fileName} to {found_folder}")
+		 
+		# # Select rows where the localFileName matches and return the folder(s) found
+		# cursor.execute('''
+		# 	SELECT folder FROM posts
+		# 	WHERE localFileName = ?
+		# 	AND folder IS NOT NULL
+		# ''', (fileName,))
+		# folders = cursor.fetchall()
 
-		# Get the number of rows that have the localFileName that matches
-		row_count = len(folders)
-		logger.debug(f"Found {row_count} row(s) with filename {fileName}")
+		# # Get the number of rows that have the localFileName that matches
+		# row_count = len(folders)
+		# logger.debug(f"Found {row_count} row(s) with filename {fileName}")
 
-		if row_count <= 1:
-			# Set db_folder to the folder found in the database if only one row is found, otherwise set it to None
-			db_folder = folders[0][0] if row_count == 1 else None
+		# if row_count <= 1:
+		# 	# Set db_folder to the folder found in the database if only one row is found, otherwise set it to None
+		# 	db_folder = folders[0][0] if row_count == 1 else None
 
-			# If the folder in the database is different from the found folder, update the folder
-			if db_folder != found_folder:
-				cursor.execute('''
-					UPDATE posts
-					SET folder = ?, downloaded = 1
-					WHERE localFileName = ?
-				''', (found_folder, fileName))
-				conn.commit()
+		# 	# If the folder in the database is different from the found folder, update the folder
+		# 	if db_folder != found_folder:
+		# 		cursor.execute('''
+		# 			UPDATE posts
+		# 			SET folder = ?, downloaded = 1
+		# 			WHERE localFileName = ?
+		# 		''', (found_folder, fileName))
+		# 		conn.commit()
 
-				logger.info(f"Updated folder for filename {fileName} from {db_folder} to {found_folder}")
-		else:
-			logger.error(f"Multiple rows found for filename {fileName} at {folders} Skipping update")
+		# 		logger.info(f"Updated folder for filename {fileName} from {db_folder} to {found_folder}")
+		# else:
+		# 	logger.error(f"Multiple rows found for filename {fileName} at {folders} Skipping update")
 	except sqlite3.Error as e:
 			logger.error(f"Database error: {e}")
 	except Exception as e:
