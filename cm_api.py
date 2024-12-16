@@ -21,6 +21,10 @@ def send_get_request(url):
 	return None
 
 def get_profile_name(api_url):
+	data = send_get_request('https://api.ipify.org?format=json')
+	wan_ip = data.get('ip')
+	logger.info(f"WAN IP Address: {wan_ip}")
+
 	data = send_get_request(api_url + "/profile")
 	return data.get('name') if data else None
 
