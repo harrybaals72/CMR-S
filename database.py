@@ -81,8 +81,8 @@ def update_db(conn, data):
 		# Check if a row with a matching post_id and serverFileName is already exists in the database
 		cursor.execute('''
 			SELECT * FROM posts
-			WHERE post_id = ? AND serverFileName = 3840x2880_02920c276a881728efb9987901e9fdd6.jpg
-		''', (post_id))
+			WHERE post_id = ? AND serverFileName = ?
+		''', (post_id, serverFileName))
 		rows = cursor.fetchall()
 		cursor.close()  # Close the cursor before updating the row
 
