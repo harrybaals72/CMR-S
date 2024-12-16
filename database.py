@@ -84,7 +84,7 @@ def update_db(conn, data):
 			cursor.execute('''
 				SELECT * FROM posts
 				WHERE post_id = ?
-			''', (post_id))
+			''', (post_id,))
 		else:
 			# Check if a row with a matching post_id and serverFileName is already exists in the database
 			logger.debug(f"Media type is not 0, checking for post ID {post_id} and serverFileName {serverFileName}")
