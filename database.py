@@ -63,8 +63,8 @@ def update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, 
 	cursor.execute('''
 		UPDATE posts
 		SET date = ?, text = ?, serverFileName = ?, serverPath = ?, post_url = ?, mediaType = ?
-		WHERE post_id = ?
-	''', (date, text, serverFileName, serverPath, post_url, mediaType, post_id))
+		WHERE post_id = ? AND serverFileName = ?
+	''', (date, text, serverFileName, serverPath, post_url, mediaType, post_id, serverFileName))
 
 	conn.commit()
 	cursor.close()  # Explicitly close the cursor
