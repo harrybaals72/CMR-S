@@ -15,9 +15,9 @@ def send_get_request(url):
 		# logger.debug(f"Data received from API: {data}, Size: {len(data)}")
 		return data
 	except requests.exceptions.HTTPError as err:
-		logger.error(f"HTTP error occurred: {err}")
+		raise Exception(f"HTTP error occurred: {err}")
 	except Exception as err:
-		logger.error(f"An error occurred: {err}")
+		raise Exception(f"An error occurred: {err}")
 	return None
 
 def get_profile_name(api_url):
