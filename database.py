@@ -72,6 +72,9 @@ def update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, 
 
 
 def update_db(conn, data):
+	inserted_count = 0
+	updated_count = 0
+
 	for post_id, date, text, serverFileName, serverPath, post_url, mediaType in data:
 		cursor = conn.cursor()
 
@@ -90,14 +93,14 @@ def update_db(conn, data):
 
 		cursor.close()  # Close the cursor before updating the row
 
-		
-
 		if len(rows) == 0:
 			logger.debug(f"No rows found with post ID {post_id} and serverFileName {serverFileName}, inserting new row")
 			insert_new_row(conn, post_id, date, text, serverFileName, serverPath, post_url, mediaType)
+			inserted_count += 1
 		elif len(rows) == 1:
 			logger.debug(f"Row with post ID {post_id} and serverFileName {serverFileName} already exists, updating row")
 			update_row(conn, post_id, date, text, serverFileName, serverPath, post_url, mediaType)
+			updated_count += 1
 		else:
 			logger.error(f"Multiple rows found with post ID {post_id} and serverFileName {serverFileName}, skipping update")
 			raise Exception(f"Multiple rows found with post ID {post_id} and serverFileName {serverFileName}, which is unexpected.")
@@ -105,6 +108,7 @@ def update_db(conn, data):
 		cursor.close()  # Explicitly close the cursor
 		
 	conn.commit()
+	logger.info(f"\nInserted {inserted_count} new rows and updated {updated_count} rows.")
 	
 	################################### END OF UPDATE_DB ###################################
 
