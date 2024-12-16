@@ -46,7 +46,7 @@ def create_db(db_path, overwrite):
 def insert_new_row(conn, post_id, date, text, serverFileName, serverPath, post_url, mediaType):
 	cursor = conn.cursor()
 
-	logger.debug(f"Inserting new row with post ID {post_id}, serverFileName {serverFileName} into the database")
+	logger.debug(f"Inserting new row with post ID {post_id}, serverFileName {serverFileName} into the database\n")
 	cursor.execute('''
 		INSERT INTO posts (post_id, date, text, serverFileName, serverPath, post_url, mediaType)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
