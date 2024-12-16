@@ -46,6 +46,16 @@ def update_file_path(conn, fileName, found_folder):
 	cursor = conn.cursor()
 
 	try:
+		#Check if there is only one row with the serverFileName
+		cursor.execute('''
+			SELECT COUNT(*) FROM posts
+			WHERE serverFileName = ?
+		''', (fileName,))
+		row_count = cursor.fetchone()[0]
+		logger.debug(f"Found {row_count} row(s) with filename {fileName}")
+		if row_count > 1:
+			raise Exception(f"Multiple rows found for filename {fileName} in DB")
+
 		# Update rows where severFileName matches
 		cursor.execute('''
 			UPDATE posts
